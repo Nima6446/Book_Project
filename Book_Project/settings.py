@@ -86,7 +86,8 @@ DATABASES = {
 }
 AUTH_USER_MODEL = 'account.User'
 
-
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "noreply@bookproject.com"
 
 
 # Password validation
