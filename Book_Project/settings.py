@@ -75,15 +75,17 @@ WSGI_APPLICATION = 'Book_Project.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'NIMA',
-        'USER': 'NIMA2234',
-        'PASSWORD': '2234a1020',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'Book_db',
+    'USER': 'nima2234',
+    'PASSWORD': '2234a1020',
+    'HOST': 'localhost',
+    'PORT': '5432',
+  }
 }
+AUTH_USER_MODEL = 'account.User'
+
 
 
 
