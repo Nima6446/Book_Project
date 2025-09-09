@@ -1,14 +1,18 @@
+from django.contrib.auth.views import LogoutView
 from django.urls import path
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView, TokenObtainPairView, TokenBlacklistView
+
 from . import views
-from .views import ActivateUserView
+from .views import ActivateUserView, MyTokenObtainPairView, ForgetPasswordView, ResetPasswordView
 
 urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='register_page'),
-    # path('login/', views.LoginView.as_view(), name='login_page'),
-    # path('logout/', views.LogoutView.as_view(), name='logout_page'),
-    # path('forget_pass/', views.ForgetPasswordView.as_view(), name='forget_password_page'),
-    # path('reset-pass/<active_code>', views.ResetPasswordView.as_view(), name='reset_password_page'),
-    # path('activate-account/<email_active_code>', views.ActivateAccountView.as_view(), name='activate_account'),
-    path('activate/<str:code>/', ActivateUserView.as_view(), name="activate"),
-
+    path('activate/<str:code>/', ActivateUserView.as_view(), name="activate_page"),
+    path('api/login/', MyTokenObtainPairView.as_view(), name='login_page'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh_page'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify_page'),
+    path('api/logout/', LogoutView.as_view(), name='logout_page'),
+    path("forget-password/", ForgetPasswordView.as_view(), name="forget_password"),
+    path("reset-password/<str:code>/", ResetPasswordView.as_view(), name="reset_password"),
 ]
+

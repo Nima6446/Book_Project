@@ -1,5 +1,6 @@
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils.crypto import get_random_string
 
 
 def send_activation_email(user):
@@ -9,3 +10,7 @@ def send_activation_email(user):
 
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
 
+def set_reset_code(user):
+    user.email_active_code = get_random_string(72)
+    user.save()
+    return user.email_active_code
