@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     #internal apps
     'home',
     'account',
+    'site_settings',
     #external apps
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
