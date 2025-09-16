@@ -5,3 +5,4 @@ fetch("/api/")
         document.getElementById("site-title").innerText = data.site_name;
     })
     .catch(error => console.error("خطا در دریافت API:", error))
+
