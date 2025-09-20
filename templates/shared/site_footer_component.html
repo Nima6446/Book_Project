@@ -1,16 +1,17 @@
 <!-- Footer Section Begin -->
+{% load static %}
 <footer class="footer-section">
     <div class="container">
         <div class="footer-text">
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-4" style="margin-bottom: 0;bottom: 18px;">
                     <div class="ft-about">
                         <div class="logo">
                             <a href="#">
-                                <img src="/static/img/footer-logo.png" alt="">
+                                <img id="footer-logo" alt="footer-logo" src=""/>
                             </a>
                         </div>
-                        <p>We inspire and reach millions of travelers<br/> across 90 local websites</p>
+                        <a href="#" id="site-about-us-page" style="color: white"></a>
                         <div class="fa-social">
                             <a href="#"><i class="fa fa-facebook"></i></a>
                             <a href="#"><i class="fa fa-twitter"></i></a>
@@ -22,9 +23,9 @@
                 </div>
                 <div class="col-lg-3 offset-lg-1">
                     <div class="ft-contact">
-                        <h6>Contact Us</h6>
+                        <h6>ارتباط با ما</h6>
                         <ul>
-                            <li>(12) 345 67890</li>
+                            <li><a href="#" id="site-footer-tell"></a></li>
                             <li>info.colorlib@gmail.com</li>
                             <li>856 Cordia Extension Apt. 356, Lake, United States</li>
                         </ul>

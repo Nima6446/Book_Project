@@ -1,6 +1,5 @@
 <!-- Header Section Begin -->
 {% load static %}
-{% load thumbnail %}
 <header class="header-section">
     <div class="top-nav">
         <div class="container">
@@ -46,10 +45,6 @@
                 <div class="col-lg-2">
                     <div class="logo">
                         <a href="./index.html">
-                            {% thumbnail site_setting.site_logo "200x200" crop="center" quality=100 as im %}
-                                <img src="{{ im.url }}" class="logo img-responsive" alt="Logo" width="{{ im.width }}"
-                                     height="{{ im.height }}">
-                            {% endthumbnail %}
                             <img id="site-logo" alt="Site Logo" src=""/>
                         </a>
                     </div>

@@ -3,6 +3,7 @@ from .models import SiteSettings, Slider
 
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
+    site_logo = serializers.ImageField(use_url=True)
     class Meta:
         model = SiteSettings
         fields = [
