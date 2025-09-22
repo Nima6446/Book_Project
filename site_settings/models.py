@@ -13,10 +13,9 @@ class SiteSettings(models.Model):
     is_main_settings = models.BooleanField(verbose_name='تنظیمات اصلی')
 
     class Meta:
-
         verbose_name = 'تنظیمات سایت'
-    verbose_name_plural = 'تنظیمات'
 
+    verbose_name_plural = 'تنظیمات'
 
     def __str__(self):
         return self.site_name
@@ -24,7 +23,7 @@ class SiteSettings(models.Model):
 
 class Slider(models.Model):
     title = models.CharField(max_length=200, verbose_name='عنوان')
-    url = models.URLField(max_length=500, verbose_name='لینک')
+    url = models.URLField(max_length=500, blank=True, null=True, verbose_name='لینک')
     url_title = models.CharField(max_length=200, verbose_name='عنوان لینک')
     descriptuon = models.TextField(max_length=200, verbose_name='توضیحات اسلایدر')
     image = models.ImageField(upload_to='images/slider', verbose_name='تصویر اسلایدر')

@@ -21,15 +21,8 @@ class SiteSettingsAPI(APIView):
         )
 
 
-class SliderAPI(APIView):
+class SliderListAPI(APIView):
     def get(self, request):
-        # گرفتن اسلایدرهای فعال
         sliders = Slider.objects.filter(is_active=True)
-        sliders_data = SliderSerializer(sliders, many=True).data
-
-        return Response(
-            {
-                "sliders": sliders_data,
-            },
-            status=status.HTTP_200_OK
-        )
+        serializer = SliderSerializer(sliders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
