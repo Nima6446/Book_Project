@@ -76,44 +76,56 @@
     }
 })();
 
-document.addEventListener("DOMContentLoaded", async function () {
+(async function loadSliders() {
   try {
     const res = await fetch("/api/v1/sliders/");
-    const sliders = await res.json();
+    const data = await res.json();
 
-    const heroSlider = document.querySelector(".hero-slider");
-    if (!heroSlider) return;
+    // خروجی تو آرایه است؛ اگر روزی آبجکت شد هم ساپورت می‌کنیم
+    const sliders = Array.isArray(data) ? data : (data.sliders || []);
+    if (!sliders.length) return;
 
-    heroSlider.innerHTML = ""; // پاک کردن اسلایدهای استاتیک
+    const $sliderContainer = document.querySelector(".hero-slider");
+    if (!$sliderContainer) return;
 
-    sliders.forEach(slide => {
-      const div = document.createElement("div");
-      div.classList.add("hs-item", "set-bg");
-      div.setAttribute("data-setbg", slide.image);
+    // ساخت اسلایدها
+    $sliderContainer.innerHTML = "";
+    sliders.forEach((item) => {
+      const slide = document.createElement("div");
+      slide.classList.add("hs-item", "set-bg");
 
-      // متن داخل اسلاید (اگه خواستی عنوان/توضیحات هم بیاد)
-      div.innerHTML = `
+      // تصویر: API تو مسیر کامل /media/... می‌دهد و مستقیم قابل استفاده است
+      slide.setAttribute("data-setbg", item.image);
+      slide.style.backgroundImage = `url(${item.image})`;
+
+      // محتوای داخلی (اختیاری)
+      slide.innerHTML = `
         <div class="hs-text">
-          <h2>${slide.title}</h2>
-          <p>${slide.descriptuon}</p>
-          ${slide.url ? `<a href="${slide.url}" class="primary-btn">${slide.url_title}</a>` : ""}
+          ${item.title ? `<h2>${item.title}</h2>` : ""}
+          ${item.descriptuon ? `<p>${item.descriptuon}</p>` : ""}
+          ${item.url ? `<a href="${item.url}" class="primary-btn">${item.url_title || "مشاهده"}</a>` : ""}
         </div>
       `;
 
-      heroSlider.appendChild(div);
+      $sliderContainer.appendChild(slide);
     });
 
-    // چون قالب از data-setbg استفاده می‌کنه برای بک‌گراند
-    document.querySelectorAll(".set-bg").forEach(el => {
+    // اگر قالبت از data-setbg استفاده می‌کند، همین حالا هم style را ست کردیم؛
+    // ولی این خط‌ها را می‌گذاریم تا کاملاً سازگار باشد:
+    document.querySelectorAll(".set-bg").forEach((el) => {
       const bg = el.getAttribute("data-setbg");
-      if (bg) {
-        el.style.backgroundImage = `url(${bg})`;
-      }
+      if (bg) el.style.backgroundImage = `url(${bg})`;
     });
 
-    // اگر داری از OwlCarousel استفاده می‌کنی باید دوباره initialize بشه
-    if (typeof $ !== "undefined" && $(".hero-slider").owlCarousel) {
-      $(".hero-slider").owlCarousel({
+    // این‌جا و فقط این‌جا Owl را init کن؛ چون main.js را برای هِیرو غیرفعال کردیم
+    if (window.jQuery && typeof jQuery.fn.owlCarousel === "function") {
+      const $owl = jQuery(".hero-slider");
+      if ($owl.hasClass("owl-loaded")) {
+        $owl.trigger("destroy.owl.carousel");
+        $owl.removeClass("owl-loaded");
+        $owl.find(".owl-stage-outer").children().unwrap();
+      }
+      $owl.owlCarousel({
         loop: true,
         margin: 0,
         items: 1,
@@ -123,14 +135,21 @@ document.addEventListener("DOMContentLoaded", async function () {
         autoplay: true,
         autoplayTimeout: 5000,
         smartSpeed: 1200,
-        animateOut: "fadeOut"
+        animateOut: "fadeOut",
+        animateIn: "fadeIn",
+        mouseDrag: false,
+        autoHeight: false
       });
     }
-
   } catch (err) {
-    console.error("خطا در گرفتن اسلایدها:", err);
+    console.error("خطا در لود اسلایدر:", err);
   }
-});
+})();
+
+
+
+
+
 
 
 
