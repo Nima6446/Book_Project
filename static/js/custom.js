@@ -76,55 +76,66 @@
     }
 })();
 
+// custom.js — فقط افزودن عنوان، بدون دست‌کاری منطق اسلایدر
 (async function loadSliders() {
   try {
     const res = await fetch("/api/v1/sliders/");
     const data = await res.json();
 
-    // خروجی تو آرایه است؛ اگر روزی آبجکت شد هم ساپورت می‌کنیم
     const sliders = Array.isArray(data) ? data : (data.sliders || []);
     if (!sliders.length) return;
 
     const $sliderContainer = document.querySelector(".hero-slider");
     if (!$sliderContainer) return;
 
-    // ساخت اسلایدها
+    // ساخت اسلایدها (مثل قبل) + ایندکس واقعی
     $sliderContainer.innerHTML = "";
-    sliders.forEach((item) => {
+    sliders.forEach((item, i) => {
       const slide = document.createElement("div");
       slide.classList.add("hs-item", "set-bg");
-
-      // تصویر: API تو مسیر کامل /media/... می‌دهد و مستقیم قابل استفاده است
+      slide.dataset.idx = i;                          // برای تشخیص اسلاید واقعی
       slide.setAttribute("data-setbg", item.image);
       slide.style.backgroundImage = `url(${item.image})`;
-
-      // محتوای داخلی (اختیاری)
-      slide.innerHTML = `
-        <div class="hs-text">
-          ${item.title ? `<h2>${item.title}</h2>` : ""}
-          ${item.descriptuon ? `<p>${item.descriptuon}</p>` : ""}
-          ${item.url ? `<a href="${item.url}" class="primary-btn">${item.url_title || "مشاهده"}</a>` : ""}
-        </div>
-      `;
-
       $sliderContainer.appendChild(slide);
     });
 
-    // اگر قالبت از data-setbg استفاده می‌کند، همین حالا هم style را ست کردیم؛
-    // ولی این خط‌ها را می‌گذاریم تا کاملاً سازگار باشد:
+    // ست بک‌گراند (مثل قبل)
     document.querySelectorAll(".set-bg").forEach((el) => {
       const bg = el.getAttribute("data-setbg");
       if (bg) el.style.backgroundImage = `url(${bg})`;
     });
 
-    // این‌جا و فقط این‌جا Owl را init کن؛ چون main.js را برای هِیرو غیرفعال کردیم
+    // المان‌های متن
+    const $heroTitle = document.getElementById("hero-title");
+    const $heroDesc  = document.getElementById("hero-desc");
+    const $heroLink  = document.getElementById("hero-link");
+
+    // تابع آپدیت متن‌ها
+    function updateContent(idx) {
+      const s = sliders[idx] || {};
+      if ($heroTitle) $heroTitle.textContent = s.title || "";
+      if ($heroDesc)  $heroDesc.textContent  = s.descriptuon || "";
+      if ($heroLink) {
+        if (s.url) {
+          $heroLink.href = s.url;
+          $heroLink.textContent = s.url_title || s.title || "مشاهده";
+          $heroLink.style.display = "inline-block";
+        } else {
+          $heroLink.style.display = "none";
+        }
+      }
+    }
+
+    // راه‌اندازی Owl (همان منطق سالم قبلی)
     if (window.jQuery && typeof jQuery.fn.owlCarousel === "function") {
       const $owl = jQuery(".hero-slider");
+
       if ($owl.hasClass("owl-loaded")) {
         $owl.trigger("destroy.owl.carousel");
         $owl.removeClass("owl-loaded");
         $owl.find(".owl-stage-outer").children().unwrap();
       }
+
       $owl.owlCarousel({
         loop: true,
         margin: 0,
@@ -140,11 +151,33 @@
         mouseDrag: false,
         autoHeight: false
       });
+
+      // مقدار اولیه بر اساس آیتم فعالِ فعلی
+      (function setInitial() {
+        const firstReal = +$owl.find(".owl-item.active .hs-item").data("idx");
+        updateContent(Number.isFinite(firstReal) ? firstReal : 0);
+      })();
+
+      // با تغییر اسلاید، متن‌ها را با ایندکس واقعی آپدیت کن
+      $owl.on("changed.owl.carousel", function (e) {
+        const real = +$owl
+          .find(".owl-item")
+          .eq(e.item.index)
+          .find(".hs-item")
+          .data("idx");
+        const idx = Number.isFinite(real) ? real : (e.item.index % sliders.length);
+        updateContent(idx);
+      });
     }
   } catch (err) {
     console.error("خطا در لود اسلایدر:", err);
   }
 })();
+
+
+
+
+
 
 
 
