@@ -673,6 +673,7 @@ ul, ol {
 .services-section {
 	padding-bottom: 60px;
 	border-top: 1px solid #e5e5e5;
+	cursor: default;
 }
 .services-section .section-title {
 	margin-bottom: 36px;
