@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'home',
     'account',
     'site_settings',
+    'room',
     #external apps
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',

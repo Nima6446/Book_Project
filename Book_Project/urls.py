@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include("account.urls")),
     path('', include("home.urls")),
     path("api/v1/", include("site_settings.urls")),
+    path("rooms/", include("room.urls")),
 ]
 
 if settings.DEBUG:  # فقط توی حالت development
