@@ -1,27 +1,231 @@
 from django.core.validators import MinLengthValidator, MinValueValidator, MaxValueValidator
 from django.db import models
 
-from account.models import User
-
 
 class Property(models.Model):
+    countries = [
+        "افغانستان",
+        "آلبانی",
+        "الجزایر",
+        "آندورا",
+        "آنگولا",
+        "آنتیگوا و باربودا",
+        "آرژانتین",
+        "ارمنستان",
+        "استرالیا",
+        "اتریش",
+        "آذربایجان",
+        "باهاما",
+        "بحرین",
+        "بنگلادش",
+        "باربادوس",
+        "بلاروس",
+        "بلژیک",
+        "بلیز",
+        "بنین",
+        "بوتان",
+        "بولیوی",
+        "بوسنی و هرزگوین",
+        "بوتسوانا",
+        "برزیل",
+        "برونئی",
+        "بلغارستان",
+        "بورکینافاسو",
+        "بوروندی",
+        "کاپ ورد",
+        "کامبوج",
+        "کامرون",
+        "کانادا",
+        "جمهوری آفریقای مرکزی",
+        "چاد",
+        "شیلی",
+        "چین",
+        "کلمبیا",
+        "کومور",
+        "کنگو (جمهوری)",
+        "کنگو (جمهوری دموکراتیک)",
+        "کاستاریکا",
+        "کرواسی",
+        "کوبا",
+        "قبرس",
+        "چک",
+        "دانمارک",
+        "جیبوتی",
+        "دومینیکا",
+        "جمهوری دومینیکن",
+        "اکوادور",
+        "مصر",
+        "السالوادور",
+        "استونی",
+        "اسواتینی",
+        "اتیوپی",
+        "فیجی",
+        "فنلاند",
+        "فرانسه",
+        "گابن",
+        "گامبیا",
+        "گرجستان",
+        "آلمان",
+        "غنا",
+        "یونان",
+        "گرانادا",
+        "گواتمالا",
+        "گینه",
+        "گینه بیسائو",
+        "گویان",
+        "هائیتی",
+        "هندوراس",
+        "مجارستان",
+        "ایسلند",
+        "هند",
+        "اندونزی",
+        "ایران",
+        "عراق",
+        "ایرلند",
+        "اسرائیل",
+        "ایتالیا",
+        "جامائیکا",
+        "ژاپن",
+        "اردن",
+        "قزاقستان",
+        "کنیا",
+        "کیریباتی",
+        "کویت",
+        "قرقیزستان",
+        "لائوس",
+        "لتونی",
+        "لبنان",
+        "لسوتو",
+        "لیبریا",
+        "لیبی",
+        "لیختن‌اشتاین",
+        "لیتوانی",
+        "لوکزامبورگ",
+        "ماداگاسکار",
+        "مالاوی",
+        "مالزی",
+        "مالدیو",
+        "مالی",
+        "مالت",
+        "جزایر مارشال",
+        "موریتانی",
+        "موریس",
+        "مکزیک",
+        "میکرونزی",
+        "مولداوی",
+        "موناکو",
+        "مغولستان",
+        "مونته‌نگرو",
+        "مراکش",
+        "موزامبیک",
+        "میانمار",
+        "نامیبیا",
+        "نائورو",
+        "نپال",
+        "هلند",
+        "نیوزیلند",
+        "نیکاراگوئه",
+        "نیجر",
+        "نیجریه",
+        "کره شمالی",
+        "مقدونیه شمالی",
+        "نروژ",
+        "عمان",
+        "پاکستان",
+        "پالائو",
+        "فلسطین",
+        "پاناما",
+        "پاپوآ گینه نو",
+        "پاراگوئه",
+        "پرو",
+        "فیلیپین",
+        "لهستان",
+        "پرتغال",
+        "قطر",
+        "رومانی",
+        "روسیه",
+        "رواندا",
+        "سنت کیتس و نویس",
+        "سنت لوسیا",
+        "سنت وینسنت و گرنادین‌ها",
+        "ساموآ",
+        "سان مارینو",
+        "سائوتومه و پرنسیپ",
+        "عربستان سعودی",
+        "سنگال",
+        "صربستان",
+        "سیشل",
+        "سیرالئون",
+        "سنگاپور",
+        "اسلواکی",
+        "اسلوونی",
+        "جزایر سلیمان",
+        "سومالی",
+        "آفریقای جنوبی",
+        "کره جنوبی",
+        "اسپانیا",
+        "سریلانکا",
+        "سودان",
+        "سودان جنوبی",
+        "سورینام",
+        "سوئد",
+        "سوئیس",
+        "سوریه",
+        "تاجیکستان",
+        "تانزانیا",
+        "تایلند",
+        "تیمور شرقی",
+        "توگو",
+        "تونگا",
+        "ترینیداد و توباگو",
+        "تونس",
+        "ترکیه",
+        "ترکمنستان",
+        "تووالو",
+        "اوگاندا",
+        "اوکراین",
+        "امارات متحده عربی",
+        "بریتانیا",
+        "ایالات متحده آمریکا",
+        "اروگوئه",
+        "ازبکستان",
+        "وانواتو",
+        "واتیکان",
+        "ونزوئلا",
+        "ویتنام",
+        "یمن",
+        "زامبیا",
+        "زیمبابوه",
+    ]
     ROOM = "room"
     VILLA = "villa"
     PRODUCT_TYPES = [
         (ROOM, "اتاق"),
         (VILLA, "ویلا"),
     ]
-    name = models.CharField(max_length=100, db_index=True,verbose_name="نام هتل/ویلا")
-    slug = models.SlugField(max_length=150, db_index=True, unique=True,verbose_name="نام در URL")
+    name = models.CharField(max_length=100, db_index=True, verbose_name="نام هتل/ویلا")
     type = models.CharField(max_length=20, db_index=True, choices=PRODUCT_TYPES, verbose_name="نوع اقامتگاه")
-    rating = models.CharField(validators=[MinValueValidator(1), MaxValueValidator(5)],null=True, blank=True,verbose_name="امتیاز")
-    owner = models.ForeignKey(User, on_delete=models.CASCADE,db_index=True,verbose_name="میزبان")
-    country = models.CharField(max_length=100,db_index=True,verbose_name="کشور")
-    province = models.CharField(max_length=10,verbose_name="استان")
-    city = models.CharField(max_length=100, db_index=True,verbose_name="شهر")
-    address = models.CharField(max_length=200,blank=True,verbose_name="آدرس")
-    tell = models.CharField(max_length=20,blank=True,verbose_name="تلفن")
-    email = models.EmailField(max_length=100,blank=True,verbose_name="ایمیل")
-    email = models.EmailField(max_length=100,blank=True,verbose_name="ایمیل")
+    country = models.CharField(max_length=100, choices=countries, db_index=True, verbose_name="کشور")
+    province = models.CharField(max_length=10, verbose_name="استان")
+    city = models.CharField(max_length=100, db_index=True, verbose_name="شهر")
+    address = models.CharField(max_length=200, blank=True, verbose_name="آدرس")
+    tell = models.CharField(max_length=20, blank=True, verbose_name="تلفن")
+    email = models.EmailField(max_length=100, blank=True, verbose_name="ایمیل")
 
 
+default_checkin_time = models.DecimalField(null=True, blank=True, verbose_name="زمان تحویل به میهمان")
+default_checkout_time = models.TimeField(null=True, blank=True, verbose_name="زمان تحویل به میزبان")
+
+
+class room(models.Model):
+    title = models.CharField(max_length=100, db_index=True, verbose_name="عنوان")
+    slug = models.SlugField(max_length=150, db_index=True, unique=True, verbose_name="نام در URL")
+    capacity = models.IntegerField(db_index=True, verbose_name="ظرفیت")
+    number_of_room = models.IntegerField(db_index=True, verbose_name="تعداد اتاق")
+    size = models.IntegerField(verbose_name="متراژ")
+    rating = models.CharField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True,verbose_name="امتیاز")
+    price = models.CharField(max_length=50, db_index=True, verbose_name="قیمت اجاره")
+    description = models.TextField(null=True, blank=True, verbose_name="توضیحات")
+    is_active = models.BooleanField(db_index=True, verbose_name="فعال/غیر فعال")
+    is_available = models.BooleanField(db_index=True, verbose_name="رزرو شده/نشده")
+    services = models.TextField(null=True, blank=True, verbose_name="سرویس ها/امکانات")
