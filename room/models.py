@@ -203,29 +203,29 @@ class Property(models.Model):
         (ROOM, "اتاق"),
         (VILLA, "ویلا"),
     ]
-    name = models.CharField(max_length=100, db_index=True, verbose_name="نام هتل/ویلا")
+    hotel_name = models.CharField(max_length=100, db_index=True, verbose_name="نام هتل/ویلا")
     type = models.CharField(max_length=20, db_index=True, choices=PRODUCT_TYPES, verbose_name="نوع اقامتگاه")
-    country = models.CharField(max_length=100, choices=countries, db_index=True, verbose_name="کشور")
-    province = models.CharField(max_length=10, verbose_name="استان")
+    country = models.CharField(max_length=100, choices=[(c, c) for c in countries], db_index=True, verbose_name="کشور")
+    province = models.CharField(max_length=100, verbose_name="استان")
     city = models.CharField(max_length=100, db_index=True, verbose_name="شهر")
     address = models.CharField(max_length=200, blank=True, verbose_name="آدرس")
     tell = models.CharField(max_length=20, blank=True, verbose_name="تلفن")
     email = models.EmailField(max_length=100, blank=True, verbose_name="ایمیل")
+    default_checkin_time = models.TimeField(null=True, blank=True, verbose_name="زمان تحویل به میهمان")
+    default_checkout_time = models.TimeField(null=True, blank=True, verbose_name="زمان تحویل به میزبان")
 
 
-default_checkin_time = models.DecimalField(null=True, blank=True, verbose_name="زمان تحویل به میهمان")
-default_checkout_time = models.TimeField(null=True, blank=True, verbose_name="زمان تحویل به میزبان")
-
-
-class room(models.Model):
+class Room(models.Model):
+    hotel_name = models.ForeignKey(Property, db_index=True, on_delete=models.CASCADE, null=True, blank=True,
+                                   verbose_name="نام هتل")
     title = models.CharField(max_length=100, db_index=True, verbose_name="عنوان")
     slug = models.SlugField(max_length=150, db_index=True, unique=True, verbose_name="نام در URL")
     capacity = models.IntegerField(db_index=True, verbose_name="ظرفیت")
     number_of_room = models.IntegerField(db_index=True, verbose_name="تعداد اتاق")
     size = models.IntegerField(verbose_name="متراژ")
-    rating = models.CharField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=True, blank=True,verbose_name="امتیاز")
-    price = models.CharField(max_length=50, db_index=True, verbose_name="قیمت اجاره")
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=True,
+                                              blank=True, verbose_name="امتیاز")
+    price = models.DecimalField(max_digits=12, decimal_places=2,db_index=True, verbose_name="قیمت اجاره")
     description = models.TextField(null=True, blank=True, verbose_name="توضیحات")
     is_active = models.BooleanField(db_index=True, verbose_name="فعال/غیر فعال")
-    is_available = models.BooleanField(db_index=True, verbose_name="رزرو شده/نشده")
-    services = models.TextField(null=True, blank=True, verbose_name="سرویس ها/امکانات")
+    amenity = models.TextField(null=True, blank=True, verbose_name="سرویس ها/امکانات")
