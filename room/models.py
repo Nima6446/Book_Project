@@ -216,13 +216,14 @@ class Property(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["slug"], name="unique_property_slug"),
             models.UniqueConstraint(fields=["hotel_name", "city"], name="unique_name_city"),
         ]
         indexes = [
-            models.Index(fields=["type", "city", "is_active" , "hotel_name"]),
-            models.Index(fields=["is_featured", "is_active"]),
+            models.Index(fields=["type", "city", "is_active", "hotel_name"]),
         ]
+
+    def __str__(self):
+        return self.hotel_name
 
 
 class Room(models.Model):
@@ -242,13 +243,15 @@ class Room(models.Model):
 
     class Meta:
         constraints = [
+            models.UniqueConstraint(fields=["slug"], name="unique_property_slug"),
             models.UniqueConstraint(fields=["hotel_name", "title"], name="unique_room_in_hotel"),
             models.CheckConstraint(check=models.Q(rating__gte=1, rating__lte=5), name="valid_room_rating"),
         ]
-        indexes = [
-            models.Index(fields=["room", "date"]),
-            models.Index(fields=["is_closed"]),
-        ]
+
+
+    def __str__(self):
+        return self.title
+
 
 class Availability(models.Model):
     room = models.ForeignKey(Room, db_index=True, on_delete=models.CASCADE)
@@ -256,17 +259,20 @@ class Availability(models.Model):
     units_total = models.PositiveSmallIntegerField(db_index=True, verbose_name="تعداد اتاق های خالی")
     units_reserves = models.PositiveSmallIntegerField(db_index=True, default=0, verbose_name="تعداد اتاق های رزرو شده")
     is_close = models.BooleanField(db_index=True, default=False, verbose_name="فروش بسته/باز")
-    price_override = models.DecimalField(null=True, blank=True, verbose_name="قیمت جایگزین")
+    price_override = models.DecimalField(max_digits=12,decimal_places=2,null=True, blank=True, verbose_name="قیمت جایگزین")
     min_nights = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="حداقل شب قابل رزرو")
     create_or_update_at = models.DateField(auto_now_add=True, auto_now=True, verbose_name="تاریخ ایجاد/آپدیت")
 
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=["room", "date"], name="unique_room_date"),
-            models.CheckConstraint(check=models.Q(units_reserved__lte=models.F("units_total")),
-                                   name="reserved_lte_total"),
+            models.CheckConstraint(check=models.Q(units_reserves__lte=models.F("units_total")),
+                                   name="reserves_lte_total"),
         ]
         indexes = [
             models.Index(fields=["room", "date"]),
-            models.Index(fields=["is_closed"]),
+            models.Index(fields=["is_close"]),
         ]
+
+    def __str__(self):
+        return self.room.title
