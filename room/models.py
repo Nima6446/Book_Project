@@ -219,7 +219,7 @@ class Property(models.Model):
             models.UniqueConstraint(fields=["hotel_name", "city"], name="unique_name_city"),
         ]
         indexes = [
-            models.Index(fields=["type", "city", "is_active", "hotel_name"]),
+            models.Index(fields=["type", "city", "hotel_name"]),
         ]
 
     def __str__(self):
@@ -261,7 +261,8 @@ class Availability(models.Model):
     is_close = models.BooleanField(db_index=True, default=False, verbose_name="فروش بسته/باز")
     price_override = models.DecimalField(max_digits=12,decimal_places=2,null=True, blank=True, verbose_name="قیمت جایگزین")
     min_nights = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name="حداقل شب قابل رزرو")
-    create_or_update_at = models.DateField(auto_now_add=True, auto_now=True, verbose_name="تاریخ ایجاد/آپدیت")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ آخرین بروزرسانی")
 
     class Meta:
         constraints = [
