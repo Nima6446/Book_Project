@@ -215,6 +215,8 @@ class Property(models.Model):
     default_checkout_time = models.TimeField(null=True, blank=True, verbose_name="زمان تحویل به میزبان")
 
     class Meta:
+        verbose_name = 'هتل'
+        verbose_name_plural = 'هتل ها'
         constraints = [
             models.UniqueConstraint(fields=["hotel_name", "city"], name="unique_name_city"),
         ]
@@ -242,6 +244,8 @@ class Room(models.Model):
     amenity = models.TextField(null=True, blank=True, verbose_name="سرویس ها/امکانات")
 
     class Meta:
+        verbose_name = 'اتاق'
+        verbose_name_plural = 'اتاق ها'
         constraints = [
             models.UniqueConstraint(fields=["slug"], name="unique_property_slug"),
             models.UniqueConstraint(fields=["hotel_name", "title"], name="unique_room_in_hotel"),
@@ -265,6 +269,8 @@ class Availability(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name="تاریخ آخرین بروزرسانی")
 
     class Meta:
+        verbose_name = 'وضعیت اتاق'
+        verbose_name_plural = 'وضعیت اتاق ها'
         constraints = [
             models.UniqueConstraint(fields=["room", "date"], name="unique_room_date"),
             models.CheckConstraint(check=models.Q(units_reserves__lte=models.F("units_total")),
